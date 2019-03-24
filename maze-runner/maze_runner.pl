@@ -9,14 +9,12 @@ path(Source, Destination, Weight) :- pway(Source, Destination, Weight).
  
 % if path is less than the currently stored path, replace it
 shorterPath([H|Path], Weight) :-		       
-	reversePath([H|T], W), !, Weight < W,          
+	reversePath([H|_], W), !, Weight < W,          
 	retract(reversePath([H|_], _)),
-	format('~w is closer than ~w\n', [[H|Path], [H|T]]),
 	assert(reversePath([H|Path], Weight)).
 
 % store new path
 shorterPath(Path, Weight) :-		       
-	format('New path:~w\n', [Path]),
 	assert(reversePath(Path, Weight)).
  
 % traverses each unvisited adjacent node then compares weight to current minimum weight
@@ -35,14 +33,14 @@ traverse(_).
  
 % finds all weights, once the destination is reached, path and distance are reported
 solve(Source, Destination) :-
-    format('Finding the shortest path between source node ~w and destination node ~w:\n\n', [Source, Destination]),
+    format('Finding the shortest path between node ~w (source) and node ~w (destination):\n', [Source, Destination]),
 	traverse(Source),                   
 	reversePath([Destination|ReversePath], Weight)->        
 	  reverse([Destination|ReversePath], Path),   
 	  CumulativeWeight is round(Weight),
-	  format('Shortest path is ~w with distance ~w = ~w\n\n',
+	  format('\tShortest path is ~w with distance ~w = ~w\n\n',
 	       [Path, Weight, CumulativeWeight]);
-	format('There is no route from ~w to ~w\n', [Source, Destination]).
+	format('\tThere is no route from ~w to ~w\n', [Source, Destination]).
 
 % sample graph
 pway(a, b, 3).
