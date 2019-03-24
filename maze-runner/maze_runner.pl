@@ -33,14 +33,14 @@ traverse(_).
  
 % finds all weights, once the destination is reached, path and distance are reported
 solve(Source, Destination) :-
-    format('Finding the shortest path between node ~w (source) and node ~w (destination):\n', [Source, Destination]),
+    format('Finding the shortest path between ~w (source) and ~w (destination):\n', [Source, Destination]),
 	traverse(Source),                   
 	reversePath([Destination|ReversePath], Weight)->        
 	  reverse([Destination|ReversePath], Path),   
 	  CumulativeWeight is round(Weight),
-	  format('\tShortest path is ~w with distance ~w = ~w\n\n',
+	  format('\tShortest path: P = ~w \n\tWeight: N = ~w = ~w\n\n',
 	       [Path, Weight, CumulativeWeight]);
-	format('\tThere is no route from ~w to ~w\n', [Source, Destination]).
+	format('\tThere are no paths connecting nodes ~w and ~w!\n', [Source, Destination]).
 
 % sample graph
 pway(a, b, 3).
