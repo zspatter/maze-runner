@@ -9,4 +9,4 @@ Simple Prolog program that finds a path through a maze (shortest path problem).
 - How to avoid visiting the same node multiple times (preventing cycles)
 
 ### Usage: 
-`solve(<start point>, <end point>, P, N)`
+`solve(<start point>, <end point>, Path, Weight)`
