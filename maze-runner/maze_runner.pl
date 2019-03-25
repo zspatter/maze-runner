@@ -21,6 +21,8 @@ verifyCurrentWeight(Source, Destination, CurrentWeight, MaxWeight, Path, Cummula
     IncrementedWeight is CurrentWeight + 1,
     verifyCurrentWeight(Source, Destination, IncrementedWeight, MaxWeight, Path, CummulativeWeight).
 
+% calls pathFinder while adding a path (list) consisting of just the source node
+% this creates a list which will be appended as connections are added
 pfWrapper(Source, Destination, Path, CummulativeWeight) :-
     pathFinder(Source, Destination, [Source], Path, CummulativeWeight).
 
