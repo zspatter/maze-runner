@@ -2,11 +2,12 @@
 :- set_prolog_stack(global, limit(8 000 000)).  % limit term space (8Mb)
 :- set_prolog_stack(local,  limit(2 000 000)).  % limit environment space
 
+% ensures the graph behaves as undirected (pway can be traversed in either direction)
 path(Source, Destination, Weight) :- pway(Source, Destination, Weight) ; pway(Destination, Source, Weight).
 
 % finds shortest paths incrementally. Arbitrary ceiling of 250 is set for the weight.
 solve(Source, Destination, Path, Weight) :-
-    format('Finding paths from ~w to ~w:', [Source, Destination]),
+    format('Finding paths from ~w to ~w:\n\n', [Source, Destination]),
     verifyCurrentWeight(Source, Destination, 0, 250, Path, Weight).
     
 % finds paths with a cummulative weight equal to that of CurrentWeight
