@@ -4,8 +4,7 @@
 :- dynamic(reversePath/2).
  
 % makes edges behave as undirected
-path(Source, Destination, Weight) :- pway(Destination, Source, Weight).
-path(Source, Destination, Weight) :- pway(Source, Destination, Weight).
+path(Source, Destination, Weight) :- pway(Source, Destination, Weight) ; pway(Source, Destination, Weight).
  
 % if path is less than the currently stored path, replace it
 shorterPath([H|Path], Weight) :-		       
