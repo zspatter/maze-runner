@@ -2,37 +2,39 @@
 :- set_prolog_stack(global, limit(8 000 000)).  % limit term space (8Mb)
 :- set_prolog_stack(local,  limit(2 000 000)).  % limit environment space
 
-% makes graph behave as undirected
 path(Source, Destination, Weight) :- pway(Source, Destination, Weight) ; pway(Destination, Source, Weight).
 
-% finds shortest paths incrementally. Arbitrary ceiling of 1,000 is set.
+% finds shortest paths incrementally. Arbitrary ceiling of 250 is set for the weight.
 solve(Source, Destination, Path, Weight) :-
-    verifyCurrentWeight(Source, Destination, 0, 1000, Path, Weight).
+    format('Finding paths from ~w to ~w:', [Source, Destination]),
+    verifyCurrentWeight(Source, Destination, 0, 250, Path, Weight).
     
-% finds paths with an overall weight equal to CurrentWeight
+% finds paths with a cummulative weight equal to that of CurrentWeight
 verifyCurrentWeight(Source, Destination, CurrentWeight, _, Path, CummulativeWeight) :-
 	pfWrapper(Source, Destination, Path, RecursiveWeight),
     CurrentWeight =:= RecursiveWeight,
     CummulativeWeight is RecursiveWeight.
 
 % increments the CurrentWeight variable if there is no path with a length of CurrentWeight
+% (gradually increases the cummulative weight of a path being searched for)
 verifyCurrentWeight(Source, Destination, CurrentWeight, MaxWeight, Path, CummulativeWeight) :-
     CurrentWeight < MaxWeight,
     IncrementedWeight is CurrentWeight + 1,
     verifyCurrentWeight(Source, Destination, IncrementedWeight, MaxWeight, Path, CummulativeWeight).
 
-% calls pathFinder while adding a path (list) consisting of just the source node
-% this creates a list which will be appended as connections are added
+% wrapper predicate adds a path (list) containing just the Source.
+% (this adds an additional (default) parameter which allows pathFinder to be called).
+% Each time this wrapper is called, a blank list is created with the source of the path
+% where additional connection will be appended (later)
 pfWrapper(Source, Destination, Path, CummulativeWeight) :-
     pathFinder(Source, Destination, [Source], Path, CummulativeWeight).
 
-% destination reached
+% destination reached (breaks the recursive call)
 pathFinder(Previous, Destination, CurrentPath, Path, CummulativeWeight) :-
     pway(Previous, Destination, CummulativeWeight),
-   % not(member(Previous, CurrentPath)),
     append(CurrentPath, [Destination], Path).
 
-% recursive case
+% recursive search which prevents cycles with the not(member(...)...) clause
 pathFinder(Source, Destination, CurrentPath, Path, CummulativeWeight) :-
     path(Source, Next, Weight),
     not(member(Next, CurrentPath) ; member(Destination, CurrentPath)),
