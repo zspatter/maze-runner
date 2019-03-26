@@ -81,7 +81,7 @@ pway(a, f, 1).
 pway(f, d, 14).
 pway(f, e, 6).
 pway(a, g, 7).
-pway(e, g, 9)
+pway(e, g, 9).
 pway(h, i, 2).
 pway(j, k, 4).
 pway(j, l, 8).
