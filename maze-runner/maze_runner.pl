@@ -17,38 +17,38 @@ solve(Source, Destination, Path, Weight) :-
     format('Finding paths from ~w to ~w:\n\n', [Source, Destination]),
     searchForSpecifiedWeight(Source, Destination, 0, 250, Path, Weight).
     
-% finds paths with a cummulative weight equal to that of CurrentWeight
-searchForSpecifiedWeight(Source, Destination, CurrentWeight, _, Path, CummulativeWeight) :-
+% finds paths with a cumulative weight equal to that of CurrentWeight
+searchForSpecifiedWeight(Source, Destination, CurrentWeight, _, Path, CumulativeWeight) :-
 	pfWrapper(Source, Destination, Path, RecursiveWeight),
     CurrentWeight =:= RecursiveWeight,
-    CummulativeWeight is RecursiveWeight.
+    CumulativeWeight is RecursiveWeight.
 
 % increments the CurrentWeight variable if there is no path with a length of CurrentWeight
-% (gradually increases the cummulative weight of a path being searched for)
-searchForSpecifiedWeight(Source, Destination, CurrentWeight, MaxWeight, Path, CummulativeWeight) :-
+% (gradually increases the cumulative weight of a path being searched for)
+searchForSpecifiedWeight(Source, Destination, CurrentWeight, MaxWeight, Path, CumulativeWeight) :-
     CurrentWeight < MaxWeight,
     IncrementedWeight is CurrentWeight + 1,
-    searchForSpecifiedWeight(Source, Destination, IncrementedWeight, MaxWeight, Path, CummulativeWeight).
+    searchForSpecifiedWeight(Source, Destination, IncrementedWeight, MaxWeight, Path, CumulativeWeight).
 
 % wrapper predicate adds a path (list) containing just the Source.
 % (this adds an additional (default) parameter which allows pathFinder to be called).
 % Each time this wrapper is called, a blank list is created with the source (root) of the path
 % where additional connection will be appended (later)
-pfWrapper(Source, Destination, Path, CummulativeWeight) :-
-    pathFinder(Source, Destination, [Source], Path, CummulativeWeight).
+pfWrapper(Source, Destination, Path, CumulativeWeight) :-
+    pathFinder(Source, Destination, [Source], Path, CumulativeWeight).
 
 % destination reached (breaks the recursive call)
-pathFinder(Previous, Destination, CurrentPath, Path, CummulativeWeight) :-
-    pway(Previous, Destination, CummulativeWeight),
+pathFinder(Previous, Destination, CurrentPath, Path, CumulativeWeight) :-
+    pway(Previous, Destination, CumulativeWeight),
     append(CurrentPath, [Destination], Path).
 
 % recursive search which prevents cycles with the not(member(...)...) clause
-pathFinder(Source, Destination, CurrentPath, Path, CummulativeWeight) :-
+pathFinder(Source, Destination, CurrentPath, Path, CumulativeWeight) :-
     path(Source, Next, Weight),
     not(member(Next, CurrentPath) ; member(Destination, CurrentPath)),
     append(CurrentPath, [Next], NewPath),
     pathFinder(Next, Destination, NewPath, Path, RecursiveWeight),
-    CummulativeWeight is Weight + RecursiveWeight.
+    CumulativeWeight is Weight + RecursiveWeight.
  
 % sample graph
 pway(a, b, 3).
