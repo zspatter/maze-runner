@@ -11,27 +11,28 @@
 % ensures the graph behaves as undirected (pway can be traversed in either direction)
 path(Source, Destination, Weight) :- pway(Source, Destination, Weight) ; pway(Destination, Source, Weight).
 
-% finds shortest paths incrementally. Arbitrary ceiling of 250 is set for the weight.
+% finds shortest paths incrementally. 
+% Arbitrary ceiling of 250 is set for the weight.
 solve(Source, Destination, Path, Weight) :-
     format('Finding paths from ~w to ~w:\n\n', [Source, Destination]),
-    verifyCurrentWeight(Source, Destination, 0, 250, Path, Weight).
+    searchForSpecifiedWeight(Source, Destination, 0, 250, Path, Weight).
     
 % finds paths with a cummulative weight equal to that of CurrentWeight
-verifyCurrentWeight(Source, Destination, CurrentWeight, _, Path, CummulativeWeight) :-
+searchForSpecifiedWeight(Source, Destination, CurrentWeight, _, Path, CummulativeWeight) :-
 	pfWrapper(Source, Destination, Path, RecursiveWeight),
     CurrentWeight =:= RecursiveWeight,
     CummulativeWeight is RecursiveWeight.
 
 % increments the CurrentWeight variable if there is no path with a length of CurrentWeight
 % (gradually increases the cummulative weight of a path being searched for)
-verifyCurrentWeight(Source, Destination, CurrentWeight, MaxWeight, Path, CummulativeWeight) :-
+searchForSpecifiedWeight(Source, Destination, CurrentWeight, MaxWeight, Path, CummulativeWeight) :-
     CurrentWeight < MaxWeight,
     IncrementedWeight is CurrentWeight + 1,
-    verifyCurrentWeight(Source, Destination, IncrementedWeight, MaxWeight, Path, CummulativeWeight).
+    searchForSpecifiedWeight(Source, Destination, IncrementedWeight, MaxWeight, Path, CummulativeWeight).
 
 % wrapper predicate adds a path (list) containing just the Source.
 % (this adds an additional (default) parameter which allows pathFinder to be called).
-% Each time this wrapper is called, a blank list is created with the source of the path
+% Each time this wrapper is called, a blank list is created with the source (root) of the path
 % where additional connection will be appended (later)
 pfWrapper(Source, Destination, Path, CummulativeWeight) :-
     pathFinder(Source, Destination, [Source], Path, CummulativeWeight).
