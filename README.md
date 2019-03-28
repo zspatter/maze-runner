@@ -12,4 +12,6 @@ This script requires a graph represented with paths in the format `pway(<node1>,
 - How to avoid visiting the same node multiple times (preventing cycles)
 
 ### Usage: 
-`solve(<start point>, <end point>, Path, Weight)`
+```Prolog
+solve(<start point>, <end point>, Path, Weight)
+```
